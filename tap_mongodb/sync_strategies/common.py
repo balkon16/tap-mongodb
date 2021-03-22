@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import ast
 import base64
 import datetime
 import time
@@ -67,6 +68,9 @@ def class_to_string(bookmark_value, bookmark_type):
         return base64.b64encode(bookmark_value).decode('utf-8')
     if bookmark_type in ['int', 'Int64', 'float', 'ObjectId', 'str', 'UUID']:
         return str(bookmark_value)
+    if bookmark_type == 'dict':
+        # experimental
+        return str(bookmark_value)
     raise UnsupportedReplicationKeyTypeException("{} is not a supported replication key type"
                                                  .format(bookmark_type))
 
@@ -92,6 +96,8 @@ def string_to_class(str_value, type_value):
         return base64.b64decode(str_value.encode())
     if type_value == 'str':
         return str(str_value)
+    if type_value == 'dict':
+        return ast.literal_eval(type_value)
     raise UnsupportedReplicationKeyTypeException("{} is not a supported replication key type"
                                                  .format(type_value))
 
